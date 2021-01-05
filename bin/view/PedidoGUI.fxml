@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.PedidoGuiController">
+   <children>
+      <Label alignment="CENTER" prefHeight="27.0" prefWidth="550.0" style="-fx-background-color: rgb(105, 0, 0);" text="Controle de pedidos" textFill="#ffa8a8">
+         <font>
+            <Font name="Arial Black" size="18.0" />
+         </font>
+      </Label>
+      <ToolBar prefHeight="40.0" prefWidth="200.0">
+        <items>
+          <Button fx:id="btnNovo" mnemonicParsing="false" onAction="#onBtnNovoAction" text="NOVO">
+               <font>
+                  <Font name="Arial" size="12.0" />
+               </font>
+            </Button>
+        </items>
+      </ToolBar>
+      <TableView prefHeight="400.0" prefWidth="550.0">
+        <columns>
+          <TableColumn prefWidth="75.0" text="COD" />
+          <TableColumn prefWidth="75.0" text="NOME" />
+           <TableColumn prefWidth="75.0" text="DATA" />
+           <TableColumn prefWidth="75.0" text="METODOPAG" />
+           <TableColumn prefWidth="75.0" text="PREÇO" />
+           <TableColumn prefWidth="75.0" text="ANOTAÇÕES" />
+           <TableColumn prefWidth="75.0" text="CLIENTE TEL" />
+        </columns>
+      </TableView>
+   </children>
+</VBox>
