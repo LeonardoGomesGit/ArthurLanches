@@ -25,10 +25,14 @@ public class PedidosDBService implements PedidosService {
 	
 	// constantes de acesso
 	final String CLASSE_DRIVER = "com.mysql.jdbc.Driver";
-	
+	//comandos de injeçao sql
 	final String INSERIR = "INSERT INTO pedido(pedido_nome, pedido_data, pedido_metodpag,pedido_preco,pedido_anotacoes) VALUES(?, STR_TO_DATE(?, '%d/%m/%Y'),?,?,?)";
-	final String BUSCAR_TODOS = "SELECT id, concessionaria, descricao, DATE_FORMAT(data_vencimento, '%d/%m/%Y') FROM contas";
+	final String ATUALIZAR = "UPDATE pedido SET pedido_nome=?, pedido_data = STR_TO_DATE(?, '%d/%m/%Y'), pedido_metodpag, pedido_preco, pedido_anotacoes WHERE id = ?";
+	final String BUSCAR = "SELECT pedido_cod, pedido_nome,STR_TO_DATE(pedido_data, '%d/%m/%Y'), pedido_metodpag,pedido_preco,pedido_anotacoes FROM pedido WHERE ID = ?";
+	final String BUSCAR_TODOS = "SELECT pedido_cod, pedido_nome,DATE_FORMAT(pedido_data, '%d/%m/%Y'), pedido_metodpag,pedido_preco,pedido_anotacoes FROM pedido";
+	
 
+// 	final String BUSCAR_TODOS = "SELECT pedido_cod, pedido_nome,DATE_FORMAT(pedido_data, '%d/%m/%Y'), pedido_metodpag,pedido_preco,pedido_anotacoes FROM pedido";
 
 	//formatando a data
 	final String FORMATO_DATA = "dd/MM/yyyy";
@@ -60,33 +64,71 @@ public class PedidosDBService implements PedidosService {
 
 	@Override
 	public List<Pedido> buscarTodas() {
-		List<Pedido> contas = new ArrayList<>();
+		List<Pedido> pedidos = new ArrayList<>();
 		try {
 			Connection con = conexao();
 			PreparedStatement buscarTodos = con.prepareStatement(BUSCAR_TODOS);
 			ResultSet resultadoBusca = buscarTodos.executeQuery();
 			while (resultadoBusca.next()) {
 				Pedido pedido = extraiPedido(resultadoBusca);
-				contas.add(pedido);
+				pedidos.add(pedido);
 			}
 			buscarTodos.close();
 			con.close();
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.err.println("ERROR BUSCANDO TODAS AS CONTAS.");
+			System.err.println("ERROR BUSCANDO PEDIDOS.");
 			System.exit(0);
 		} 
-		return contas;
+		return pedidos;
 	}
 
-	}
+	
 
 	@Override
 	public Pedido buscaPorCod(int pedido_cod) {
+		Pedido pedido = null;
+		try {
+			Connection con = conexao();
+			PreparedStatement buscar = con.prepareStatement(BUSCAR);
+			buscar.setInt(1, pedido_cod);
+			ResultSet resultadoBusca = buscar.executeQuery();
+			resultadoBusca.next();
+			pedido = extraiPedido(resultadoBusca);
+			buscar.close();
+			con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("ERROR BUSCANDO CONTA COM ID " + pedido_cod);
+			System.exit(0);
+		} 
+		return pedido;
+
 		
-		
-		return null;
 	}
+	@Override
+	public void atualizar(Pedido pedido) {
+		try {
+			Connection con = conexao();
+			PreparedStatement atualizar = con.prepareStatement(ATUALIZAR);
+			String dateStr = FORMATADOR.format(pedido.getPedido_data());
+			atualizar.setString(1, pedido.getPedido_nome());
+			atualizar.setString(2, dateStr);
+			atualizar.setString(3, pedido.getPedido_metodpag());
+			atualizar.setDouble(4, pedido.getPedido_preco());
+			atualizar.setString(5, pedido.getPedido_anotacoes());
+			atualizar.executeUpdate();
+			atualizar.close();
+			con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("ERROR ATUALIZANDO CONTA COM ID " + pedido.getPedido_cod());
+			System.exit(0);
+		} 
+
+	}
+
+
 
 	@Override
 	public void apagar(int pedido_cod) {
@@ -95,12 +137,7 @@ public class PedidosDBService implements PedidosService {
 		
 	}
 
-	@Override
-	public void atualizar(Pedido pedido) {
 
-		
-		
-	}
 	
 	// abre uma nova conexão com o banco de dados. Se algum erro for lançado
 	// aqui, verifique o erro com atenção e se o banco está rodando
@@ -130,7 +167,6 @@ public class PedidosDBService implements PedidosService {
 		pedido.setPedido_metodpag(resultadoBusca.getString(4));
 		pedido.setPedido_preco(resultadoBusca.getDouble(5));
 		pedido.setPedido_anotacoes(resultadoBusca.getString(6));
-		
 		return pedido;
 	}
 

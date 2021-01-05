@@ -22,11 +22,14 @@ public interface PedidosService {
 	
 	
 	// retorna a implementação que escolhemos - no nosso caso o ContasCSVService, 
-	// mas poderia ser outro, como ContasDBService...
+	// mas poderia ser outro, como pedidosservice...
 	public static PedidosService getNewInstance() {
 		// return new ContasCSVService();
 		return new PedidosDBService();
 	}
 
+	
+	
+	
 
 }

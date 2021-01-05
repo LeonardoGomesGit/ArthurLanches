@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.PedidoGuiController">
+<VBox prefHeight="425.0" prefWidth="550.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.PedidoGuiController">
    <children>
       <Label alignment="CENTER" prefHeight="27.0" prefWidth="550.0" style="-fx-background-color: rgb(105, 0, 0);" text="Controle de pedidos" textFill="#ffa8a8">
          <font>
@@ -24,16 +27,29 @@
             </Button>
         </items>
       </ToolBar>
-      <TableView prefHeight="400.0" prefWidth="550.0">
+      <TableView fx:id="tblPedido" onSort="#atualizaDadosTabela" prefHeight="228.0" prefWidth="550.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="COD" />
-          <TableColumn prefWidth="75.0" text="NOME" />
-           <TableColumn prefWidth="75.0" text="DATA" />
-           <TableColumn prefWidth="75.0" text="METODOPAG" />
-           <TableColumn prefWidth="75.0" text="PREÇO" />
-           <TableColumn prefWidth="75.0" text="ANOTAÇÕES" />
-           <TableColumn prefWidth="75.0" text="CLIENTE TEL" />
+          <TableColumn fx:id="clCod" prefWidth="75.0" text="COD" />
+          <TableColumn fx:id="clNome" prefWidth="75.0" text="NOME" />
+           <TableColumn fx:id="clData" prefWidth="75.0" text="DATA" />
+           <TableColumn fx:id="clMetod" prefWidth="75.0" text="METODOPAG" />
+           <TableColumn fx:id="clPreco" prefWidth="75.0" text="PREÇO" />
+           <TableColumn fx:id="clAnotacoes" prefWidth="75.0" text="ANOTAÇÕES" />
         </columns>
       </TableView>
+      <Pane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="btnSalvar" layoutX="14.0" layoutY="130.0" mnemonicParsing="false" onAction="#onbtnSalvarAction" text="Salvar" />
+            <TextField fx:id="txtnome" layoutX="38.0" layoutY="33.0" />
+            <TextField fx:id="txtMetodPag" layoutX="201.0" layoutY="33.0" />
+            <TextField fx:id="txtPreco" layoutX="364.0" layoutY="33.0" />
+            <DatePicker fx:id="data" layoutX="38.0" layoutY="85.0" prefHeight="25.0" prefWidth="149.0" />
+            <TextField fx:id="txtAnotacoes" layoutX="201.0" layoutY="85.0" />
+            <Label layoutX="38.0" layoutY="14.0" prefHeight="17.0" prefWidth="149.0" text="Nome do pedido" />
+            <Label layoutX="201.0" layoutY="14.0" prefHeight="17.0" prefWidth="149.0" text="Metodo de pagamento" />
+            <Label layoutX="364.0" layoutY="14.0" prefHeight="17.0" prefWidth="149.0" text="Preço" />
+            <Label layoutX="201.0" layoutY="68.0" prefHeight="17.0" prefWidth="149.0" text="Anotações" />
+         </children>
+      </Pane>
    </children>
 </VBox>
