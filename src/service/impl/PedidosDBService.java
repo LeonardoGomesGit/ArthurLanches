@@ -1,8 +1,13 @@
 package service.impl;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -22,7 +27,8 @@ public class PedidosDBService implements PedidosService {
 	final String CLASSE_DRIVER = "com.mysql.jdbc.Driver";
 	
 	final String INSERIR = "INSERT INTO pedido(pedido_nome, pedido_data, pedido_metodpag,pedido_preco,pedido_anotacoes) VALUES(?, STR_TO_DATE(?, '%d/%m/%Y'),?,?,?)";
-	
+	final String BUSCAR_TODOS = "SELECT id, concessionaria, descricao, DATE_FORMAT(data_vencimento, '%d/%m/%Y') FROM contas";
+
 
 	//formatando a data
 	final String FORMATO_DATA = "dd/MM/yyyy";
@@ -54,9 +60,25 @@ public class PedidosDBService implements PedidosService {
 
 	@Override
 	public List<Pedido> buscarTodas() {
-		
-		
-		return null;
+		List<Pedido> contas = new ArrayList<>();
+		try {
+			Connection con = conexao();
+			PreparedStatement buscarTodos = con.prepareStatement(BUSCAR_TODOS);
+			ResultSet resultadoBusca = buscarTodos.executeQuery();
+			while (resultadoBusca.next()) {
+				Pedido pedido = extraiPedido(resultadoBusca);
+				contas.add(pedido);
+			}
+			buscarTodos.close();
+			con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("ERROR BUSCANDO TODAS AS CONTAS.");
+			System.exit(0);
+		} 
+		return contas;
+	}
+
 	}
 
 	@Override
