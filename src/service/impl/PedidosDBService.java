@@ -120,6 +120,20 @@ public class PedidosDBService implements PedidosService {
 			return null;
 		}
 	}
+	
+	private Pedido extraiPedido(ResultSet resultadoBusca) throws SQLException, ParseException {
+		Date pedidodata = FORMATADOR.parse(resultadoBusca.getString(3));
+		Pedido pedido = new Pedido();
+		pedido.setPedido_cod(resultadoBusca.getInt(1));
+		pedido.setPedido_nome(resultadoBusca.getString(2));
+		pedido.setPedido_data(pedidodata);
+		pedido.setPedido_metodpag(resultadoBusca.getString(4));
+		pedido.setPedido_preco(resultadoBusca.getDouble(5));
+		pedido.setPedido_anotacoes(resultadoBusca.getString(6));
+		
+		return pedido;
+	}
+
 
 
 }
