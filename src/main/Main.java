@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -22,9 +23,13 @@ public class Main extends Application {
 			ScrollPane scrollPane = loader.load();
 			
 	        TableView<ObservableList<String>> table = new TableView<ObservableList<String>>();
+	        Label pane = new Label();
+	        pane.prefHeightProperty().bind(scrollPane.heightProperty());
+
 	        table.prefHeightProperty().bind(scrollPane.heightProperty());
 	        table.prefWidthProperty().bind(scrollPane.widthProperty());
-	        primaryStage.setResizable(false);
+	        primaryStage.setResizable(true);
+	        
 	        scrollPane.setFitToHeight(true);
 			scrollPane.setFitToWidth(true);
 			
