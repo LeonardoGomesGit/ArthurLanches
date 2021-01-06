@@ -3,10 +3,14 @@ package main;
 import java.io.IOException;
 
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableView;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Main extends Application {
 
@@ -17,7 +21,11 @@ public class Main extends Application {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/MainGUI.fxml"));
 			ScrollPane scrollPane = loader.load();
 			
-			scrollPane.setFitToHeight(true);
+	        TableView<ObservableList<String>> table = new TableView<ObservableList<String>>();
+	        table.prefHeightProperty().bind(scrollPane.heightProperty());
+	        table.prefWidthProperty().bind(scrollPane.widthProperty());
+	        primaryStage.setResizable(false);
+	        scrollPane.setFitToHeight(true);
 			scrollPane.setFitToWidth(true);
 			
 			mainScene = new Scene(scrollPane);

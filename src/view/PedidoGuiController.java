@@ -22,7 +22,7 @@ public class PedidoGuiController implements Initializable {
 	@FXML
 	public TableView<Pedido> tblPedido;
 	@FXML
-	private TableColumn<Pedido, String> clCod;
+	private TableColumn<Pedido, Integer> clCod;
 	@FXML
 	private TableColumn<Pedido, String> clNome;
 	@FXML
@@ -46,38 +46,33 @@ public class PedidoGuiController implements Initializable {
 	@FXML
 	private Button btnSalvar;
 
-
-	
 	private PedidosService service;
 	
-	public PedidoGuiController(){
+	MainGuiController load = new MainGuiController();
+		
+	
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		service = PedidosService.getNewInstance();
+		configuraColunas();
+		atualizaDadosTabela();
+
 		
 	}
 	
-	public void onBtnNovoAction () {
-		load.loadView("/view/PedidonewGUI.fxml", x -> {});
+	//botão salvar
+	public void onbtnSalvarAction() {
+		Pedido c = new Pedido();
+		pegaValores(c);
+		service.salvar(c);
+		configuraColunas();
+		atualizaDadosTabela();
 	}
-	
-	MainGuiController load = new MainGuiController();
 	
 	public void atualizaDadosTabela() {
 		tblPedido.getItems().setAll(service.buscarTodas());
 	}
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		service = PedidosService.getNewInstance();
-		atualizaDadosTabela();
-
-		
-	}
-	
-	public void onbtnSalvarAction() {
-		Pedido c = new Pedido();
-		pegaValores(c);
-		service.salvar(c);
-		atualizaDadosTabela();
-	}
 	
 	private void pegaValores(Pedido p) { 
 		p.setPedido_nome(txtnome.getText());
@@ -94,12 +89,15 @@ public class PedidoGuiController implements Initializable {
 	
 	
 	private void configuraColunas() {
-		clCod.setCellValueFactory(new PropertyValueFactory<>("Código"));
-		clNome.setCellValueFactory(new PropertyValueFactory<>("Nome"));
-		clData.setCellValueFactory(new PropertyValueFactory<>("Data"));
-		clMetod.setCellValueFactory(new PropertyValueFactory<>("Método de pagamento"));
-		clPreco.setCellValueFactory(new PropertyValueFactory<>("Preço"));
-		clAnotacoes.setCellValueFactory(new PropertyValueFactory<>("Anotacoes"));	}
+		clCod.setCellValueFactory(new PropertyValueFactory<>("pedido_cod"));
+		clNome.setCellValueFactory(new PropertyValueFactory<>("pedido_nome"));
+		clData.setCellValueFactory(new PropertyValueFactory<>("pedido_data"));
+		clMetod.setCellValueFactory(new PropertyValueFactory<>("pedido_metodpag"));
+		clPreco.setCellValueFactory(new PropertyValueFactory<>("pedido_preco"));
+		clAnotacoes.setCellValueFactory(new PropertyValueFactory<>("pedido_anotacoes"));	}
+	
+	
+
 
 
 
