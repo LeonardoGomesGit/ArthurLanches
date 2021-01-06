@@ -1,11 +1,13 @@
 package view;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.ResourceBundle;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -45,6 +47,12 @@ public class PedidoGuiController implements Initializable {
 	private TextField txtAnotacoes;
 	@FXML
 	private Button btnSalvar;
+	@FXML
+	private  Button btnLimpar;
+	@FXML
+	private Button btnApagar;
+	@FXML
+	private Button btnAtualizar;
 
 	private PedidosService service;
 	
@@ -56,7 +64,7 @@ public class PedidoGuiController implements Initializable {
 		service = PedidosService.getNewInstance();
 		configuraColunas();
 		atualizaDadosTabela();
-
+		configuraBindings();
 		
 	}
 	
@@ -68,6 +76,32 @@ public class PedidoGuiController implements Initializable {
 		configuraColunas();
 		atualizaDadosTabela();
 	}
+	
+	public void onbtnAtualizarAction() {
+		Pedido c = tblPedido.getSelectionModel().getSelectedItem();
+		pegaValores(c);
+		service.atualizar(c);
+		atualizaDadosTabela();
+	}
+	
+	public void onbtnLimparAction() {
+		tblPedido.getSelectionModel().select(null);
+		txtAnotacoes.setText("");
+		txtMetodPag.setText("");
+		txtnome.setText("");
+		txtPreco.setText(null);
+		data.setValue(null);
+
+	}
+	
+	public void onbtnApagarAction() {
+		Pedido c = tblPedido.getSelectionModel().getSelectedItem();
+		pegaValores(c);
+		service.apagar(c.getPedido_cod());
+		atualizaDadosTabela();
+	}
+
+	
 	
 	public void atualizaDadosTabela() {
 		tblPedido.getItems().setAll(service.buscarTodas());
@@ -97,6 +131,42 @@ public class PedidoGuiController implements Initializable {
 		clAnotacoes.setCellValueFactory(new PropertyValueFactory<>("pedido_anotacoes"));	}
 	
 	
+	private void configuraBindings() {
+		
+		BooleanBinding camposPreenchidos = txtnome.textProperty().isEmpty().or(txtAnotacoes.textProperty().isEmpty())
+				.or(txtPreco.textProperty().isNull()).or(txtMetodPag.textProperty().isEmpty()).or(data.valueProperty().isNull());
+
+		
+		BooleanBinding algoSelecionado = tblPedido.getSelectionModel().selectedItemProperty().isNull();
+		
+		btnApagar.disableProperty().bind(algoSelecionado);
+		btnAtualizar.disableProperty().bind(algoSelecionado);
+		btnLimpar.disableProperty().bind(algoSelecionado);
+
+		
+		btnSalvar.disableProperty().bind(algoSelecionado.not().or(camposPreenchidos));
+
+
+		tblPedido.getSelectionModel().selectedItemProperty().addListener((b, o, n) -> {
+			if (n != null) {
+				String s=String.valueOf(n.getPedido_preco());  
+
+				LocalDate date = null;
+				date = n.getPedido_data().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+				txtnome.setText(n.getPedido_nome());
+				txtMetodPag.setText(n.getPedido_metodpag());
+				txtPreco.setText(s);
+				txtAnotacoes.setText(n.getPedido_anotacoes());
+				data.setValue(date);
+
+			}
+		});
+
+		
+		
+		
+		
+	}
 
 
 

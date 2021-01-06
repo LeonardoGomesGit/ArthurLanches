@@ -61,6 +61,8 @@ public class Pedido {
 	public void setPedido_anotacoes(String pedido_anotacoes) {
 		this.pedido_anotacoes = pedido_anotacoes;
 	}
-    
+
+	
+	
     
 }

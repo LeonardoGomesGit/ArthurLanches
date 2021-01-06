@@ -27,10 +27,11 @@ public class PedidosDBService implements PedidosService {
 	final String CLASSE_DRIVER = "com.mysql.jdbc.Driver";
 	//comandos de injeçao sql
 	final String INSERIR = "INSERT INTO pedido(pedido_nome, pedido_data, pedido_metodpag,pedido_preco,pedido_anotacoes) VALUES(?, STR_TO_DATE(?, '%d/%m/%Y'),?,?,?)";
-	final String ATUALIZAR = "UPDATE pedido SET pedido_nome=?, pedido_data = STR_TO_DATE(?, '%d/%m/%Y'), pedido_metodpag, pedido_preco, pedido_anotacoes WHERE id = ?";
-	final String BUSCAR = "SELECT pedido_cod, pedido_nome,STR_TO_DATE(pedido_data, '%d/%m/%Y'), pedido_metodpag,pedido_preco,pedido_anotacoes FROM pedido WHERE ID = ?";
+	final String ATUALIZAR = "UPDATE pedido SET pedido_nome=?,pedido_data = STR_TO_DATE(?, '%d/%m/%Y'), pedido_metodpag = ?, pedido_preco = ?, pedido_anotacoes = ?  WHERE pedido_cod = ?";
+	final String BUSCAR = "SELECT pedido_cod, pedido_nome,STR_TO_DATE(pedido_data, '%d/%m/%Y'), pedido_metodpag,pedido_preco,pedido_anotacoes FROM pedido WHERE pedido_cod = ?";
 	final String BUSCAR_TODOS = "SELECT pedido_cod, pedido_nome,DATE_FORMAT(pedido_data, '%d/%m/%Y'), pedido_metodpag,pedido_preco,pedido_anotacoes FROM pedido";
-	
+	final String APAGAR = "DELETE FROM pedido WHERE pedido_cod = ?";
+
 
 // 	final String BUSCAR_TODOS = "SELECT pedido_cod, pedido_nome,DATE_FORMAT(pedido_data, '%d/%m/%Y'), pedido_metodpag,pedido_preco,pedido_anotacoes FROM pedido";
 
@@ -117,6 +118,8 @@ public class PedidosDBService implements PedidosService {
 			atualizar.setString(3, pedido.getPedido_metodpag());
 			atualizar.setDouble(4, pedido.getPedido_preco());
 			atualizar.setString(5, pedido.getPedido_anotacoes());
+			atualizar.setInt(6, pedido.getPedido_cod());
+
 			atualizar.executeUpdate();
 			atualizar.close();
 			con.close();
@@ -133,9 +136,21 @@ public class PedidosDBService implements PedidosService {
 	@Override
 	public void apagar(int pedido_cod) {
 	
-		
-		
+		try {
+			Connection con = conexao();
+			PreparedStatement apagar = con.prepareStatement(APAGAR);
+			apagar.setInt(1, pedido_cod);
+			apagar.executeUpdate();
+			apagar.close();
+			con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("ERROR APAGANDO PEDIDO COM ID " + pedido_cod);
+			System.exit(0);
+		} 
 	}
+
+		
 
 
 	
